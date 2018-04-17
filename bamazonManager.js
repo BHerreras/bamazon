@@ -23,7 +23,7 @@ function managerMenu() {
 			{
 				name: "manage",
 				type: "list",
-				message: "Welcome, Manager, what would you like to do?",
+				message: "Manager View, what would you like to do?",
 				choices: ["View Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product"]
 			}
 		])
@@ -66,10 +66,23 @@ function viewLow() {
 		if (err) throw err;
 		for (var i = 0; i < results.length; ++i) {
 			console.log(" ");
-			console.log(results[i].product_name + " | Id: " + results[i].item_id);
+			console.log(results[i].product_name + " | Id: " + results[i].id);
 			console.log("Quantity in stock: " + results[i].stock_quantity);
 		}
+		/*if (results[i].stock_quantity <= 3) {
+			inquirer
+				.prompt([
+					{
+						name: "add",
+						type: "input",
+						message: "Would you like to add more?"
+					},
+				])
 
+		} else {
+			console.log("Inventory Stock is all good")
+		}
+*/
 	});
 }
 function newProduct() {

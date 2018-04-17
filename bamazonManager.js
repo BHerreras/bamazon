@@ -68,21 +68,30 @@ function viewLow() {
 			console.log(" ");
 			console.log(results[i].product_name + " | Id: " + results[i].id);
 			console.log("Quantity in stock: " + results[i].stock_quantity);
-		}
-		/*if (results[i].stock_quantity <= 3) {
-			inquirer
-				.prompt([
-					{
-						name: "add",
-						type: "input",
-						message: "Would you like to add more?"
-					},
-				])
 
-		} else {
-			console.log("Inventory Stock is all good")
+			if (results[i].stock_quantity <= 3) {
+				inquirer
+					.prompt([
+						{
+							name: "add",
+							type: "list",
+							message: "Would you like to add more?",
+							choices: ["Sure", "Not Now"]
+						},
+					])
+					.then(function (answer) {
+						switch (answer.manage) {
+							case "Sure":
+								restock();
+								break;
+						}
+					});
+
+			} else {
+				console.log("Inventory Stock is all good")
+			}
 		}
-*/
+
 	});
 }
 function newProduct() {

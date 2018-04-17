@@ -72,3 +72,83 @@ function viewLow() {
 
 	});
 }
+function newProduct() {
+	inquirer
+		.prompt([
+			{
+				name: "name",
+				type: "input",
+				message: "What is the name of the new product?"
+			},
+			{
+				name: "department",
+				type: "list",
+				message: "What department will this go in?"
+			},
+			{
+				name: "price",
+				type: "input",
+				message: "What is the price of the new product?"
+			},
+			{
+				name: "quantity",
+				type: "input",
+				message: "How many are we adding?"
+			}
+		])
+		.then(function (answer) {
+			conn.query(
+				"INSERT INTO products SET ?",
+				{
+					product_name: answer.name,
+					department_name: answer.department,
+					price: answer.price,
+					stock_quantity: answer.quantity
+				},
+				function (err) {
+					if (err) throw err;
+					console.log("New Product Added");
+				}
+			);
+		});
+}
+function restock() {
+	conn.query("SELECT * FROM products", function (err, results) {
+		if (err) throw err;
+		var currentStock = results.stock_quantity;
+		inquirer
+			.prompt([
+				{
+					name: "itemOptions",
+					type: "list",
+					message: "Which item are we restocking?",
+					choices: function () {
+						var choiceItem = [];
+						for (var i = 0; i < results.length; i++) {
+							choiceItem.push(results[i].item_name);
+						}
+						return choiceItem;
+					}
+				},
+				{
+					name: "quantity",
+					type: "input",
+					message: "How many units are we adding?",
+				}
+			])
+			.then(function (answer) {
+				conn.query("UPDATE products SET ? WHERE ?", [
+					{
+						stock_quantity: currentStock + answer.quantity
+					},
+					{
+						product_name: answer.itemOptions
+					},
+					function (err) {
+						if (err) throw err;
+						console.log("Quantity Updated");
+					}]
+				);
+			})
+	});
+}
